@@ -603,7 +603,7 @@ func Test_getModelDiskSize(t *testing.T) {
 		expectedSize int64
 	}{
 		{"testModelSize/1/airbnb.model.lr.zip", 15259},
-		{"testModelSize/1", 15259},
+		{"testModelSize/1", 152591},
 		{"testModelSize/2", 39375276},
 	}
 
