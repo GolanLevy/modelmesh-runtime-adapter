@@ -114,9 +114,15 @@ func (s *TritonAdapterServer) LoadModel(ctx context.Context, req *mmesh.LoadMode
 		return nil, status.Errorf(status.Code(err), "Failed to load Model due to adapter error: %s", err)
 	}
 
+	s.Log.Info("Trying to load model", "model_id", req.ModelId)
+	loadStart := time.Now()
+
 	_, tritonErr := s.Client.RepositoryModelLoad(ctx, &triton.RepositoryModelLoadRequest{
 		ModelName: req.ModelId,
 	})
+
+	s.Log.Info("Loaded model request done", "model_id", req.ModelId, "duration", time.Since(loadStart))
+
 	if tritonErr != nil {
 		log.Error(tritonErr, "Triton failed to load model")
 		return nil, status.Errorf(status.Code(tritonErr), "Failed to load Model due to Triton runtime error: %s", tritonErr)
@@ -158,9 +164,12 @@ func getModelType(req *mmesh.LoadModelRequest, log logr.Logger) string {
 }
 
 func (s *TritonAdapterServer) UnloadModel(ctx context.Context, req *mmesh.UnloadModelRequest) (*mmesh.UnloadModelResponse, error) {
+	s.Log.Info("Trying to unload model", "model_id", req.ModelId)
+	unloadStart := time.Now()
 	_, tritonErr := s.Client.RepositoryModelUnload(ctx, &triton.RepositoryModelUnloadRequest{
 		ModelName: req.ModelId,
 	})
+	s.Log.Info("Unloaded model request done", "model_id", req.ModelId, "duration", time.Since(unloadStart))
 
 	if tritonErr != nil {
 		// check if we got a gRPC error as a response that indicates that Triton
