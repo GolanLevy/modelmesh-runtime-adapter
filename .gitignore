@@ -5,5 +5,9 @@
 .bash_history
 .env
 .idea
+*.iml
 
 public/
+
+.pre-commit.log
+
